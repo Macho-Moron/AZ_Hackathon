@@ -6,7 +6,7 @@ const router = express.Router();
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 router.post('/', async (req, res) => {
-  const { topic } = req.body;
+  const { topic, userId } = req.body;
   console.log('Received topic, calling Gemini API for:', topic);
 
   if (!topic) {
@@ -24,8 +24,9 @@ router.post('/', async (req, res) => {
 
     // --- SAVE TO DATABASE ---
     const newCourse = new Course({
-      topic: topic,
-      outline: courseOutline,
+    topic: topic,
+    outline: courseOutline,
+    userId: userId, // <-- SAVE IT
     });
     await newCourse.save();
     console.log('Course saved to database.');
